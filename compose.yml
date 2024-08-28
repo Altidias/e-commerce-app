@@ -1,0 +1,45 @@
+services:
+  app:
+    container_name: ecommerce-app
+    image: ecommerce-web
+    build: .
+    depends_on:
+      - mongo
+    ports:
+      - "3000:3000"
+    networks:
+      - frontend
+      - backend
+
+  mongo:
+    container_name: ecommerce-db
+    image: mongo
+    volumes:
+      - mongodata:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - backend
+
+  proxy:
+    container_name: ecommerce-proxy
+    image: nginx
+    depends_on:
+      - app
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl/localhost.crt:/etc/ssl/certs/localhost.crt
+      - ./ssl/localhost.key:/etc/ssl/private/localhost.key
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - frontend
+
+volumes:
+  mongodata:
+
+networks:
+  backend:
+    internal: true
+  frontend:
