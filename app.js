@@ -16,7 +16,7 @@ const cartRoutes = require('./routes/cart/cart');
 
 
 
-mongoose.connect('mongodb://mongo:27017/shopping-cart', 
+mongoose.connect('mongodb://root:password@mongo-service:27017/shopping-cart?authSource=admin', 
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -55,7 +55,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// seedDB();
+seedDB();
 
 app.get('/', (req, res) => {
     res.render('landingPage');
